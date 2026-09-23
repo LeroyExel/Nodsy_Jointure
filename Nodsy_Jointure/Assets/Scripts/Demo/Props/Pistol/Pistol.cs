@@ -15,7 +15,7 @@ namespace Jointure.Samples
         [SerializeField] private Rigidbody _cartridgePrefab;
         [SerializeField] private Transform _cartridgeSpawnTransform;
         [SerializeField] private Vector3 _ejectForce;
-        [SerializeField] private GameObject _bulletHolePrefab; // Make an object pooling system if you want
+        [SerializeField] public GameObject _bulletHolePrefab; // Make an object pooling system if you want
         private enum CartridgeStatus
         {
             None,
@@ -196,7 +196,7 @@ namespace Jointure.Samples
         {
             _slideBack = true;
         }
-
+       
         public void SlideForward()
         {
             if (SlideLocked)
