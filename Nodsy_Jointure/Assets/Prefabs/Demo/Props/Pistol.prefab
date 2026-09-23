@@ -290,9 +290,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1745602294153913671}
-        m_TargetAssemblyTypeName: Jointure.Samples.GunAnimator, Nodsy.Jointure
+        m_TargetAssemblyTypeName: Jointure.Samples.GunAnimator, Assembly-CSharp
         m_MethodName: UpdateSlide
-        m_Mode: 4
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -7420,10 +7420,6 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 44594a4b787b9a94e920d161aaba36c0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -7946244652993024178, guid: 44594a4b787b9a94e920d161aaba36c0, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -5930041980729405407, guid: 44594a4b787b9a94e920d161aaba36c0, type: 3}
       propertyPath: m_Enabled
