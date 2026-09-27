@@ -13,11 +13,19 @@ namespace Jointure
 
         private void Update()
         {
-            if (Mathf.Abs(_player.InputReader.TurnInput) < 0.75f)
-                return;
+            if (_player == null) _player = GetComponentInParent<Player>();
+            if (_player == null || _player.InputReader == null) return;
 
-            float normalisedTurnInput = _player.InputReader.TurnInput / Mathf.Abs(_player.InputReader.TurnInput);
-            _player.ControllerRig.transform.Rotate(0f, normalisedTurnInput * 20f * _player.SmoothTurnSpeed * Time.deltaTime, 0f); //Rotates player
+            float turnInput = _player.InputReader.TurnInput;
+            if (Mathf.Abs(turnInput) < 0.15f) return;
+
+            float speed = turnInput * _player.SmoothTurnSpeed * 15f * Time.deltaTime;
+            Vector3 pivot = _player.transform.position;
+            if (_player.ControllerRig != null && _player.ControllerRig.CameraTransform != null)
+            {
+                pivot = _player.ControllerRig.CameraTransform.position;
+            }
+            _player.transform.RotateAround(pivot, Vector3.up, speed);
         }
     }
 }

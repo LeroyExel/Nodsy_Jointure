@@ -825,30 +825,73 @@ namespace Jointure
         {
             if (rigInstance == null) return false;
 
+            Transform rootT = rigInstance.transform;
+            while (rootT.parent != null && rootT.GetComponent<Player>() == null && !rootT.name.Contains("[Jointure] Player Rig"))
+            {
+                rootT = rootT.parent;
+            }
+            GameObject rootRig = rootT.gameObject;
+
             if (characterInstance == null)
             {
-                var charT = rigInstance.transform.Find("AnimationRig/Character");
+                var charT = rootRig.transform.Find("AnimationRig/Character");
                 if (charT != null) characterInstance = charT.gameObject;
+                else
+                {
+                    var anim = rootRig.GetComponentInChildren<Animator>();
+                    if (anim != null) characterInstance = anim.gameObject;
+                }
             }
-            if (characterInstance == null) return false;
+            if (characterInstance == null)
+            {
+                Debug.LogWarning("[Jointure] Character instance could not be found for calibration.");
+                return false;
+            }
 
             if (templateRigPrefab == null)
             {
                 templateRigPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(DefaultTemplateRigPath);
             }
 
-            Transform leftArmTarget = rigInstance.transform.Find("PhysicsRig/LeftHand/LeftArmTarget");
-            Transform rightArmTarget = rigInstance.transform.Find("PhysicsRig/RightHand/RightArmTarget");
-            Transform leftLegTarget = rigInstance.transform.Find("AnimationRig/LeftFootAnchor/LeftLegTarget");
-            Transform rightLegTarget = rigInstance.transform.Find("AnimationRig/RightFootAnchor/RightLegTarget");
+            // Find IK Targets
+            Transform leftArmTarget = null;
+            Transform rightArmTarget = null;
 
-            if (leftArmTarget == null || rightArmTarget == null || leftLegTarget == null || rightLegTarget == null)
+            var ctrlRig = rootRig.GetComponentInChildren<ControllerRig>();
+            if (ctrlRig != null)
             {
-                Debug.LogWarning("[Jointure] Could not find all IK targets for calibration in rig.");
+                leftArmTarget = ctrlRig.LeftHandTarget;
+                rightArmTarget = ctrlRig.RightHandTarget;
+                if (leftArmTarget == null && ctrlRig.LeftControllerTransform != null)
+                    leftArmTarget = ctrlRig.LeftControllerTransform.Find("LeftHandIKTarget");
+                if (rightArmTarget == null && ctrlRig.RightControllerTransform != null)
+                    rightArmTarget = ctrlRig.RightControllerTransform.Find("RightHandIKTarget");
+            }
+
+            // Fallback searches
+            if (leftArmTarget == null)
+            {
+                leftArmTarget = rootRig.transform.Find("ControllerRig/CameraOffset/FloorOffset/LeftController/LeftHandIKTarget")
+                             ?? rootRig.transform.Find("PhysicsRig/LeftHand/LeftArmTarget")
+                             ?? rootRig.transform.Find("PhysicsRig/LeftHand");
+            }
+            if (rightArmTarget == null)
+            {
+                rightArmTarget = rootRig.transform.Find("ControllerRig/CameraOffset/FloorOffset/RightController/RightHandIKTarget")
+                              ?? rootRig.transform.Find("PhysicsRig/RightHand/RightArmTarget")
+                              ?? rootRig.transform.Find("PhysicsRig/RightHand");
+            }
+
+            if (leftArmTarget == null || rightArmTarget == null)
+            {
+                Debug.LogWarning("[Jointure] Could not find LeftHandIKTarget or RightHandIKTarget for calibration in rig.");
                 return false;
             }
 
-            // Find new character bones
+            Transform leftLegTarget = rootRig.transform.Find("AnimationRig/LeftFootAnchor/LeftLegTarget");
+            Transform rightLegTarget = rootRig.transform.Find("AnimationRig/RightFootAnchor/RightLegTarget");
+
+            // Find character bones
             Animator newAnim = characterInstance.GetComponent<Animator>();
             Transform newLHand = newAnim != null ? newAnim.GetBoneTransform(HumanBodyBones.LeftHand) : null;
             Transform newRHand = newAnim != null ? newAnim.GetBoneTransform(HumanBodyBones.RightHand) : null;
@@ -861,56 +904,70 @@ namespace Jointure
             if (newLFoot == null) newLFoot = FindBoneByName(characterInstance.transform, "mixamorig:LeftFoot", "LeftFoot", "foot_l", "foot.l");
             if (newRFoot == null) newRFoot = FindBoneByName(characterInstance.transform, "mixamorig:RightFoot", "RightFoot", "foot_r", "foot.r");
 
-            if (newLHand == null || newRHand == null || newLFoot == null || newRFoot == null)
+            if (newLHand == null || newRHand == null)
             {
-                Debug.LogWarning("[Jointure] Could not find all limbs (hands/feet) on character for calibration.");
+                Debug.LogWarning("[Jointure] Could not find hands on character for calibration.");
                 return false;
             }
 
-            // Template reference rest rotations (Human.fbx baseline in Player Rig)
-            // LeftHand: (359.25, 355.77, 91.14), Target: (346.10, 0, 180) -> Delta: (341.89, 0.87, 88.64)
-            // RightHand: (359.25, 4.23, 268.86), Target: (346.10, 0, 180) -> Delta: (341.89, 359.13, 271.36)
-            Quaternion deltaLHand = Quaternion.Euler(341.89f, 0.87f, 88.64f);
-            Quaternion deltaRHand = Quaternion.Euler(341.89f, 359.13f, 271.36f);
+            // Calibrated rotations for VR Controller space:
+            // Natural forward pointing grip with slight ergonomic downward tilt and inward palm
+            Vector3 baseLeftEuler = new Vector3(255f, 180f, 0f);
+            Vector3 baseRightEuler = new Vector3(255f, 180f, 0f);
+            Vector3 baseLeftPos = new Vector3(-0.01f, -0.04f, -0.08f);
+            Vector3 baseRightPos = new Vector3(0.01f, -0.04f, -0.08f);
 
-            // Compute calibrated rotations
-            Quaternion calibratedLHand = deltaLHand * newLHand.rotation;
-            Quaternion calibratedRHand = deltaRHand * newRHand.rotation;
-            Quaternion calibratedLFoot = newLFoot.rotation;
-            Quaternion calibratedRFoot = newRFoot.rotation;
-
-            // Set local rotations
-            leftArmTarget.localRotation = calibratedLHand;
-            rightArmTarget.localRotation = calibratedRHand;
-            leftLegTarget.localRotation = calibratedLFoot;
-            rightLegTarget.localRotation = calibratedRFoot;
+            leftArmTarget.localRotation = Quaternion.Euler(baseLeftEuler);
+            rightArmTarget.localRotation = Quaternion.Euler(baseRightEuler);
+            leftArmTarget.localPosition = baseLeftPos;
+            rightArmTarget.localPosition = baseRightPos;
 
             EditorUtility.SetDirty(leftArmTarget);
             EditorUtility.SetDirty(rightArmTarget);
-            EditorUtility.SetDirty(leftLegTarget);
-            EditorUtility.SetDirty(rightLegTarget);
 
-            // Update or add RigCalibration component
-            Transform animRigT = rigInstance.transform.Find("AnimationRig");
-            if (animRigT != null)
+            Vector3 baseLFootEuler = Vector3.zero;
+            Vector3 baseRFootEuler = Vector3.zero;
+            if (leftLegTarget != null && newLFoot != null)
             {
-                RigCalibration rigCal = animRigT.GetComponent<RigCalibration>();
-                if (rigCal == null) rigCal = animRigT.gameObject.AddComponent<RigCalibration>();
-
-                rigCal.LeftArmTarget = leftArmTarget;
-                rigCal.RightArmTarget = rightArmTarget;
-                rigCal.LeftLegTarget = leftLegTarget;
-                rigCal.RightLegTarget = rightLegTarget;
-                rigCal.CharacterAnimator = newAnim;
-                rigCal.SetBaseRotations(calibratedLHand.eulerAngles, calibratedRHand.eulerAngles, calibratedLFoot.eulerAngles, calibratedRFoot.eulerAngles);
-                EditorUtility.SetDirty(rigCal);
+                leftLegTarget.localRotation = newLFoot.rotation;
+                baseLFootEuler = leftLegTarget.localEulerAngles;
+                EditorUtility.SetDirty(leftLegTarget);
+            }
+            if (rightLegTarget != null && newRFoot != null)
+            {
+                rightLegTarget.localRotation = newRFoot.rotation;
+                baseRFootEuler = rightLegTarget.localEulerAngles;
+                EditorUtility.SetDirty(rightLegTarget);
             }
 
-            Debug.Log($"[Jointure] Auto-calibrated rig targets for '{characterInstance.name}':\n" +
-                      $"  LeftArmTarget: {calibratedLHand.eulerAngles}\n" +
-                      $"  RightArmTarget: {calibratedRHand.eulerAngles}\n" +
-                      $"  LeftLegTarget: {calibratedLFoot.eulerAngles}\n" +
-                      $"  RightLegTarget: {calibratedRFoot.eulerAngles}");
+            // Update or add RigCalibration component on root rig or AnimationRig
+            RigCalibration rigCal = rootRig.GetComponent<RigCalibration>();
+            if (rigCal == null)
+            {
+                Transform animRigT = rootRig.transform.Find("AnimationRig");
+                if (animRigT != null) rigCal = animRigT.GetComponent<RigCalibration>();
+                if (rigCal == null) rigCal = rootRig.AddComponent<RigCalibration>();
+            }
+
+            rigCal.LeftArmTarget = leftArmTarget;
+            rigCal.RightArmTarget = rightArmTarget;
+            rigCal.LeftLegTarget = leftLegTarget;
+            rigCal.RightLegTarget = rightLegTarget;
+            rigCal.CharacterAnimator = newAnim;
+            rigCal.BaseLeftHandEuler = baseLeftEuler;
+            rigCal.BaseRightHandEuler = baseRightEuler;
+            rigCal.BaseLeftHandPos = baseLeftPos;
+            rigCal.BaseRightHandPos = baseRightPos;
+            rigCal.LeftHandOffset = Vector3.zero;
+            rigCal.RightHandOffset = Vector3.zero;
+            rigCal.LeftHandPosOffset = Vector3.zero;
+            rigCal.RightHandPosOffset = Vector3.zero;
+            rigCal.SetBaseRotations(baseLeftEuler, baseRightEuler, baseLFootEuler, baseRFootEuler);
+            EditorUtility.SetDirty(rigCal);
+
+            Debug.Log($"[Jointure] Successfully calibrated rig targets for '{characterInstance.name}':\n" +
+                      $"  LeftArmTarget: {baseLeftEuler} @ {baseLeftPos}\n" +
+                      $"  RightArmTarget: {baseRightEuler} @ {baseRightPos}");
 
             return true;
         }

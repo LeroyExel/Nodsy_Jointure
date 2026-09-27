@@ -48,14 +48,10 @@ namespace Jointure
         [Header("Rotation Tuning")]
         public Vector3 HandRotationOffset = Vector3.zero;
 
+        // Note: Hand position and rotation are controlled by VRIK and PuppetMaster.
+        // HandAnimator is strictly responsible for finger animations.
         private void LateUpdate()
         {
-            Quaternion rot = _handTarget.rotation;
-            if (HandRotationOffset != Vector3.zero)
-            {
-                rot *= Quaternion.Euler(HandRotationOffset);
-            }
-            _hand.SetPositionAndRotation(_handTarget.position, rot);
         }
 
         private void UpdateCurls()

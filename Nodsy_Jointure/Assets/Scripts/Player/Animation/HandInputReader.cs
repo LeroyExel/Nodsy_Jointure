@@ -78,10 +78,20 @@ namespace Jointure
 
             ThumbstickTouchedAction.action.performed += OnThumbstickTouched;
             ThumbstickTouchedAction.action.canceled += OnThumbstickTouched;
-
-            ThumbstickTouchedAction.action.performed += OnThumbstickTouched;
-            ThumbstickTouchedAction.action.canceled += OnThumbstickTouched;
 #endif
+
+            if (Hand == null)
+            {
+                var hands = UnityEngine.Object.FindObjectsByType<Hand>(FindObjectsSortMode.None);
+                foreach (var h in hands)
+                {
+                    if (h != null && h.HandInputReader == this)
+                    {
+                        Hand = h;
+                        break;
+                    }
+                }
+            }
         }
 
         private void Update()
@@ -93,12 +103,14 @@ namespace Jointure
             GetWebInputs();
 #endif
 
-            Hand.CurrentGrab?.GetComponent<Interactable>()?.Tick();
+            if (Hand != null && Hand.CurrentGrab != null)
+                Hand.CurrentGrab.GetComponent<Interactable>()?.Tick();
         }
 
         private void FixedUpdate()
         {
-            Hand.CurrentGrab?.GetComponent<Interactable>()?.PhysicsTick();
+            if (Hand != null && Hand.CurrentGrab != null)
+                Hand.CurrentGrab.GetComponent<Interactable>()?.PhysicsTick();
         }
 
 #if UNITY_WEBGL
@@ -138,6 +150,7 @@ namespace Jointure
 
         private void OnTriggerButton(InputAction.CallbackContext callbackContext)
         {
+            if (Hand == null) return;
             Grab currentGrab = Hand.CurrentGrab;
 
             if (!currentGrab || callbackContext.started)
@@ -171,6 +184,7 @@ namespace Jointure
         {
             PrimaryButton = callbackContext.performed;
 
+            if (Hand == null) return;
             Grab currentGrab = Hand.CurrentGrab;
 
             if (!currentGrab || callbackContext.started)
@@ -189,6 +203,7 @@ namespace Jointure
         {
             SecondaryButton = callbackContext.performed ? true : false;
 
+            if (Hand == null) return;
             Grab currentGrab = Hand.CurrentGrab;
 
             if (!currentGrab || callbackContext.started)

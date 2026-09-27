@@ -75,6 +75,13 @@ namespace Jointure
 
         public override void Process()
         {
+            if (Data == null)
+            {
+                Data = new PointerEventData(eventSystem);
+                if (_eventCamera != null)
+                    Data.position = new Vector2(_eventCamera.pixelWidth / 2f, _eventCamera.pixelHeight / 2f);
+            }
+
             //UI raycast
             eventSystem.RaycastAll(Data, m_RaycastResultCache);
             Data.pointerCurrentRaycast = FindFirstRaycast(m_RaycastResultCache);

@@ -5,8 +5,7 @@ namespace Jointure
     public class SnapTurn : MonoBehaviour
     {
         private Player _player;
-
-        private bool _isTurning; // Prevents multiple turns when only one is wanted
+        private bool _isTurning;
 
         private void Awake()
         {
@@ -15,14 +14,28 @@ namespace Jointure
 
         private void Update()
         {
-            bool wasTurning = _isTurning;
-            _isTurning = Mathf.Abs(_player.InputReader.TurnInput) >= 0.75f;
+            if (_player == null) _player = GetComponentInParent<Player>();
+            if (_player == null || _player.InputReader == null) return;
 
-            if (wasTurning || !_isTurning)
+            float turnInput = _player.InputReader.TurnInput;
+            bool wantsTurn = Mathf.Abs(turnInput) >= 0.65f;
+
+            if (!wantsTurn)
+            {
+                _isTurning = false;
                 return;
+            }
 
-            float normalisedTurnInput = _player.InputReader.TurnInput / Mathf.Abs(_player.InputReader.TurnInput);
-            _player.ControllerRig.transform.Rotate(0f, normalisedTurnInput * _player.SnapTurnIncrement, 0f); //Rotates player
+            if (_isTurning) return;
+
+            _isTurning = true;
+            float angle = Mathf.Sign(turnInput) * _player.SnapTurnIncrement;
+            Vector3 pivot = _player.transform.position;
+            if (_player.ControllerRig != null && _player.ControllerRig.CameraTransform != null)
+            {
+                pivot = _player.ControllerRig.CameraTransform.position;
+            }
+            _player.transform.RotateAround(pivot, Vector3.up, angle);
         }
     }
 }

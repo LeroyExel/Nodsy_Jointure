@@ -95,54 +95,125 @@ namespace Jointure
         {
             using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
             {
-                _showHands = EditorGUILayout.Foldout(_showHands, "🖐 Hand Rotations", true, EditorStyles.foldoutHeader);
+                _showHands = EditorGUILayout.Foldout(_showHands, "🖐 Hand Calibration & Offsets", true, EditorStyles.foldoutHeader);
                 if (_showHands)
                 {
                     EditorGUILayout.Space(2);
 
-                    // Left Hand
-                    EditorGUILayout.LabelField("Left Hand Offset", EditorStyles.boldLabel);
-                    EditorGUI.BeginChangeCheck();
-                    Vector3 newLeftOffset = EditorGUILayout.Vector3Field("Offset (Euler)", rigCal.LeftHandOffset);
-                    if (EditorGUI.EndChangeCheck())
+                    // Quick Grip Angle Presets
+                    using (new EditorGUILayout.HorizontalScope())
                     {
-                        Undo.RecordObject(rigCal, "Change Left Hand Offset");
-                        rigCal.LeftHandOffset = newLeftOffset;
-                        rigCal.ApplyRotations();
-                        EditorUtility.SetDirty(rigCal);
+                        if (GUILayout.Button("Grip (255°)", EditorStyles.miniButtonLeft))
+                        {
+                            Undo.RecordObject(rigCal, "Apply Grip Preset");
+                            rigCal.BaseLeftHandEuler = new Vector3(255f, 0f, 90f);
+                            rigCal.BaseRightHandEuler = new Vector3(255f, 0f, 270f);
+                            rigCal.LeftHandOffset = Vector3.zero;
+                            rigCal.RightHandOffset = Vector3.zero;
+                            rigCal.ApplyRotations();
+                            EditorUtility.SetDirty(rigCal);
+                        }
+                        if (GUILayout.Button("Neutral (270°)", EditorStyles.miniButtonMid))
+                        {
+                            Undo.RecordObject(rigCal, "Apply Neutral Preset");
+                            rigCal.BaseLeftHandEuler = new Vector3(270f, 0f, 90f);
+                            rigCal.BaseRightHandEuler = new Vector3(270f, 0f, 270f);
+                            rigCal.LeftHandOffset = Vector3.zero;
+                            rigCal.RightHandOffset = Vector3.zero;
+                            rigCal.ApplyRotations();
+                            EditorUtility.SetDirty(rigCal);
+                        }
+                        if (GUILayout.Button("Flat (285°)", EditorStyles.miniButtonRight))
+                        {
+                            Undo.RecordObject(rigCal, "Apply Flat Preset");
+                            rigCal.BaseLeftHandEuler = new Vector3(285f, 0f, 90f);
+                            rigCal.BaseRightHandEuler = new Vector3(285f, 0f, 270f);
+                            rigCal.LeftHandOffset = Vector3.zero;
+                            rigCal.RightHandOffset = Vector3.zero;
+                            rigCal.ApplyRotations();
+                            EditorUtility.SetDirty(rigCal);
+                        }
                     }
 
-                    DrawNudgeButtons(rigCal, () => rigCal.LeftHandOffset, (val) => rigCal.LeftHandOffset = val);
+                    EditorGUILayout.Space(4);
+
+                    // Left Hand
+                    using (new EditorGUILayout.VerticalScope(GUI.skin.box))
+                    {
+                        EditorGUILayout.LabelField("Left Hand", EditorStyles.boldLabel);
+                        EditorGUI.BeginChangeCheck();
+                        Vector3 newLeftOffset = EditorGUILayout.Vector3Field("Rotation Offset", rigCal.LeftHandOffset);
+                        Vector3 newLeftPosOffset = EditorGUILayout.Vector3Field("Position Offset", rigCal.LeftHandPosOffset);
+                        if (EditorGUI.EndChangeCheck())
+                        {
+                            Undo.RecordObject(rigCal, "Change Left Hand Tuning");
+                            rigCal.LeftHandOffset = newLeftOffset;
+                            rigCal.LeftHandPosOffset = newLeftPosOffset;
+                            rigCal.ApplyRotations();
+                            EditorUtility.SetDirty(rigCal);
+                        }
+
+                        using (new EditorGUILayout.HorizontalScope())
+                        {
+                            if (GUILayout.Button("🔄 Flip Left Hand (180° Roll)"))
+                            {
+                                Undo.RecordObject(rigCal, "Flip Left Hand");
+                                rigCal.FlipHandRoll(true);
+                                EditorUtility.SetDirty(rigCal);
+                            }
+                        }
+
+                        DrawNudgeButtons(rigCal, () => rigCal.LeftHandOffset, (val) => rigCal.LeftHandOffset = val);
+                    }
 
                     EditorGUILayout.Space(4);
 
                     // Right Hand
-                    EditorGUILayout.LabelField("Right Hand Offset", EditorStyles.boldLabel);
-                    EditorGUI.BeginChangeCheck();
-                    Vector3 newRightOffset = EditorGUILayout.Vector3Field("Offset (Euler)", rigCal.RightHandOffset);
-                    if (EditorGUI.EndChangeCheck())
+                    using (new EditorGUILayout.VerticalScope(GUI.skin.box))
                     {
-                        Undo.RecordObject(rigCal, "Change Right Hand Offset");
-                        rigCal.RightHandOffset = newRightOffset;
-                        rigCal.ApplyRotations();
-                        EditorUtility.SetDirty(rigCal);
+                        EditorGUILayout.LabelField("Right Hand", EditorStyles.boldLabel);
+                        EditorGUI.BeginChangeCheck();
+                        Vector3 newRightOffset = EditorGUILayout.Vector3Field("Rotation Offset", rigCal.RightHandOffset);
+                        Vector3 newRightPosOffset = EditorGUILayout.Vector3Field("Position Offset", rigCal.RightHandPosOffset);
+                        if (EditorGUI.EndChangeCheck())
+                        {
+                            Undo.RecordObject(rigCal, "Change Right Hand Tuning");
+                            rigCal.RightHandOffset = newRightOffset;
+                            rigCal.RightHandPosOffset = newRightPosOffset;
+                            rigCal.ApplyRotations();
+                            EditorUtility.SetDirty(rigCal);
+                        }
+
+                        using (new EditorGUILayout.HorizontalScope())
+                        {
+                            if (GUILayout.Button("🔄 Flip Right Hand (180° Roll)"))
+                            {
+                                Undo.RecordObject(rigCal, "Flip Right Hand");
+                                rigCal.FlipHandRoll(false);
+                                EditorUtility.SetDirty(rigCal);
+                            }
+                        }
+
+                        DrawNudgeButtons(rigCal, () => rigCal.RightHandOffset, (val) => rigCal.RightHandOffset = val);
                     }
 
-                    DrawNudgeButtons(rigCal, () => rigCal.RightHandOffset, (val) => rigCal.RightHandOffset = val);
-
                     EditorGUILayout.Space(4);
-                    _showBaseValues = EditorGUILayout.Foldout(_showBaseValues, "Show Base Hand Rotations", true);
+                    _showBaseValues = EditorGUILayout.Foldout(_showBaseValues, "Show Base Hand Values", true);
                     if (_showBaseValues)
                     {
                         EditorGUI.indentLevel++;
                         EditorGUI.BeginChangeCheck();
-                        Vector3 bL = EditorGUILayout.Vector3Field("Base Left Hand", rigCal.BaseLeftHandEuler);
-                        Vector3 bR = EditorGUILayout.Vector3Field("Base Right Hand", rigCal.BaseRightHandEuler);
+                        Vector3 bL = EditorGUILayout.Vector3Field("Base Left Hand Euler", rigCal.BaseLeftHandEuler);
+                        Vector3 bR = EditorGUILayout.Vector3Field("Base Right Hand Euler", rigCal.BaseRightHandEuler);
+                        Vector3 bLP = EditorGUILayout.Vector3Field("Base Left Hand Pos", rigCal.BaseLeftHandPos);
+                        Vector3 bRP = EditorGUILayout.Vector3Field("Base Right Hand Pos", rigCal.BaseRightHandPos);
                         if (EditorGUI.EndChangeCheck())
                         {
-                            Undo.RecordObject(rigCal, "Change Base Hand Rotations");
+                            Undo.RecordObject(rigCal, "Change Base Hand Values");
                             rigCal.BaseLeftHandEuler = bL;
                             rigCal.BaseRightHandEuler = bR;
+                            rigCal.BaseLeftHandPos = bLP;
+                            rigCal.BaseRightHandPos = bRP;
                             rigCal.ApplyRotations();
                             EditorUtility.SetDirty(rigCal);
                         }

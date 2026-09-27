@@ -10,6 +10,9 @@ namespace Jointure
 
         private void Update()
         {
+            if (Hand == null || Hand.HandInputReader == null || Hand.GrabHandler == null)
+                return;
+
             bool wasGrabbing = _isGrabbing;
 
             _isGrabbing = Hand.HandInputReader.Grip >= 0.5f;

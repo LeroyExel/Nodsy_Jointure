@@ -254,31 +254,44 @@ namespace Jointure
             switch (_cameraMode)
             {
                 case 0:
-                    _cameraModeDisplay.text = "Headset";
-                    _thirdPersonCamera.SetActive(false);
-                    _thirdPersonCameraCollider.enabled = true;
-                    _thirdPersonCamera.transform.parent = _player.PhysicsRig.PelvisRigidbody.transform;
+                    if (_cameraModeDisplay != null) _cameraModeDisplay.text = "Headset";
+                    if (_thirdPersonCamera != null)
+                    {
+                        _thirdPersonCamera.SetActive(false);
+                        if (_thirdPersonCameraCollider != null) _thirdPersonCameraCollider.enabled = true;
+                        Transform pelvis = _player.PhysicsRig != null && _player.PhysicsRig.PelvisRigidbody != null
+                            ? _player.PhysicsRig.PelvisRigidbody.transform
+                            : (_player.PuppetMaster != null && _player.PuppetMaster.muscles.Length > 0 && _player.PuppetMaster.muscles[0].rigidbody != null
+                                ? _player.PuppetMaster.muscles[0].rigidbody.transform
+                                : _player.transform);
+                        _thirdPersonCamera.transform.parent = pelvis;
+                    }
                     PlayerPrefs.SetInt("CameraMode", 0);
                     break;
                 case 1:
-                    _cameraModeDisplay.text = "Spectator";
-                    _spectatorCamera.SetActive(true);
+                    if (_cameraModeDisplay != null) _cameraModeDisplay.text = "Spectator";
+                    if (_spectatorCamera != null) _spectatorCamera.SetActive(true);
                     PlayerPrefs.SetInt("CameraMode", 1);
                     break;
                 case 2:
-                    _cameraModeDisplay.text = "Third-person";
-                    _spectatorCamera.SetActive(false);
-                    _thirdPersonCamera.transform.position = _cameraTransform.position + _cameraTransform.forward;
-                    _thirdPersonCamera.transform.LookAt(_cameraTransform);
-                    _thirdPersonCamera.GetComponent<Rigidbody>().isKinematic = false;
-                    _thirdPersonCamera.SetActive(true);
+                    if (_cameraModeDisplay != null) _cameraModeDisplay.text = "Third-person";
+                    if (_spectatorCamera != null) _spectatorCamera.SetActive(false);
+                    if (_thirdPersonCamera != null && _cameraTransform != null)
+                    {
+                        _thirdPersonCamera.transform.position = _cameraTransform.position + _cameraTransform.forward;
+                        _thirdPersonCamera.transform.LookAt(_cameraTransform);
+                        if (_thirdPersonCamera.TryGetComponent<Rigidbody>(out var rb)) rb.isKinematic = false;
+                        _thirdPersonCamera.SetActive(true);
+                    }
                     break;
                 case 3:
-                    _cameraModeDisplay.text = "Third-person follow";
-
-                    _thirdPersonCamera.GetComponent<Rigidbody>().isKinematic = true;
-                    _thirdPersonCameraCollider.enabled = false;
-                    _thirdPersonCamera.transform.parent = _cameraOffsetTransform;
+                    if (_cameraModeDisplay != null) _cameraModeDisplay.text = "Third-person follow";
+                    if (_thirdPersonCamera != null)
+                    {
+                        if (_thirdPersonCamera.TryGetComponent<Rigidbody>(out var rb)) rb.isKinematic = true;
+                        if (_thirdPersonCameraCollider != null) _thirdPersonCameraCollider.enabled = false;
+                        _thirdPersonCamera.transform.parent = _cameraOffsetTransform;
+                    }
                     break;
             }
 #endif
@@ -313,32 +326,35 @@ namespace Jointure
         }
         public void SmoothLocomotion()
         {
-            _player.PhysicsRig.GetComponent<TeleportLocomotion>().enabled = false; //Disable teleport
-            _player.PhysicsRig.GetComponent<SmoothLocomotion>().enabled = true; //Enable smooth
+            if (_player.PhysicsRig != null)
+            {
+                if (_player.PhysicsRig.TryGetComponent<TeleportLocomotion>(out var teleport)) teleport.enabled = false;
+                if (_player.PhysicsRig.TryGetComponent<SmoothLocomotion>(out var smooth)) smooth.enabled = true;
+            }
             PlayerPrefs.SetInt("LocomotionType", 0);
         }
         public void TeleportLocomotion()
         {
-            _player.PhysicsRig.GetComponent<SmoothLocomotion>().enabled = false; //Disable smooth
-            _player.PhysicsRig.GetComponent<TeleportLocomotion>().enabled = true; //Enable teleport
+            if (_player.PhysicsRig != null)
+            {
+                if (_player.PhysicsRig.TryGetComponent<SmoothLocomotion>(out var smooth)) smooth.enabled = false;
+                if (_player.PhysicsRig.TryGetComponent<TeleportLocomotion>(out var teleport)) teleport.enabled = true;
+            }
             PlayerPrefs.SetInt("LocomotionType", 1);
         }
         public void NoTurn()
         {
-            _player.PhysicsRig.GetComponent<SmoothTurn>().enabled = false; //Disable smooth
-            _player.PhysicsRig.GetComponent<SnapTurn>().enabled = false; //Disable snap
+            if (_player != null) _player.SetTurnMode(0);
             PlayerPrefs.SetInt("TurnType", 0);
         }
         public void SmoothTurn()
         {
-            _player.PhysicsRig.GetComponent<SnapTurn>().enabled = false; //Disable snap
-            _player.PhysicsRig.GetComponent<SmoothTurn>().enabled = true; //Enable smooth
+            if (_player != null) _player.SetTurnMode(1);
             PlayerPrefs.SetInt("TurnType", 1);
         }
         public void SnapTurn()
         {
-            _player.PhysicsRig.GetComponent<SmoothTurn>().enabled = false; //Disable smooth
-            _player.PhysicsRig.GetComponent<SnapTurn>().enabled = true; //Enable snap
+            if (_player != null) _player.SetTurnMode(2);
             PlayerPrefs.SetInt("TurnType", 2);
         }
         public void UpdateSmoothTurnSpeed()

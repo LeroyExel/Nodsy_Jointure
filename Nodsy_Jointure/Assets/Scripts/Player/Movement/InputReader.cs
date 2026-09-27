@@ -54,7 +54,7 @@ namespace Jointure
 
         private void OnRun(InputAction.CallbackContext context)
         {
-            BroadcastMessage("Run");
+            BroadcastMessage("Run", SendMessageOptions.DontRequireReceiver);
         }
 
         private void OnCrouchChanged()
@@ -64,12 +64,12 @@ namespace Jointure
 
         private void OnJumpAnticipate(InputAction.CallbackContext context)
         {
-            BroadcastMessage("AnticipateJump");
+            BroadcastMessage("AnticipateJump", SendMessageOptions.DontRequireReceiver);
         }
 
         private void OnJump(InputAction.CallbackContext context)
         {
-            BroadcastMessage("Jump");
+            BroadcastMessage("Jump", SendMessageOptions.DontRequireReceiver);
         }
 
         private void OnTurn()

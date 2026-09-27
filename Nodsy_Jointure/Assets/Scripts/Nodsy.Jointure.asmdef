@@ -3,7 +3,8 @@
     "rootNamespace": "Jointure",
     "references": [
         "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:fd4abe4ffe74ef1448afe15c6cb36bb7"
+        "GUID:fd4abe4ffe74ef1448afe15c6cb36bb7",
+        "GUID:6d4810c931e638d489b58e9b332f3fb9"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

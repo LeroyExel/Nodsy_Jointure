@@ -30,11 +30,23 @@ namespace Jointure
         [Tooltip("Additional rotation offset applied to Right Leg / Foot target.")]
         public Vector3 RightFootOffset = Vector3.zero;
 
+        [Header("Position Offsets (Meters)")]
+        [Tooltip("Additional position offset applied to Left Arm / Hand target.")]
+        public Vector3 LeftHandPosOffset = Vector3.zero;
+
+        [Tooltip("Additional position offset applied to Right Arm / Hand target.")]
+        public Vector3 RightHandPosOffset = Vector3.zero;
+
         [Header("Base Rotations (Pre-Offset)")]
-        [SerializeField] private Vector3 _baseLeftHandEuler = new Vector3(346.10f, 0f, 180f);
-        [SerializeField] private Vector3 _baseRightHandEuler = new Vector3(346.10f, 0f, 180f);
+        [SerializeField] private Vector3 _baseLeftHandEuler = new Vector3(285f, 0f, 90f);
+        [SerializeField] private Vector3 _baseRightHandEuler = new Vector3(285f, 0f, 270f);
         [SerializeField] private Vector3 _baseLeftFootEuler = new Vector3(0.87f, 269.49f, 239.40f);
         [SerializeField] private Vector3 _baseRightFootEuler = new Vector3(0.87f, 90.51f, 120.60f);
+
+        [Header("Base Positions (Pre-Offset)")]
+        [SerializeField] private Vector3 _baseLeftHandPos = new Vector3(-0.01f, -0.04f, -0.08f);
+        [SerializeField] private Vector3 _baseRightHandPos = new Vector3(0.01f, -0.04f, -0.08f);
+
         [SerializeField] private bool _isCalibrated = false;
 
         public bool IsCalibrated => _isCalibrated;
@@ -43,6 +55,8 @@ namespace Jointure
         public Vector3 BaseRightHandEuler { get => _baseRightHandEuler; set => _baseRightHandEuler = value; }
         public Vector3 BaseLeftFootEuler { get => _baseLeftFootEuler; set => _baseLeftFootEuler = value; }
         public Vector3 BaseRightFootEuler { get => _baseRightFootEuler; set => _baseRightFootEuler = value; }
+        public Vector3 BaseLeftHandPos { get => _baseLeftHandPos; set => _baseLeftHandPos = value; }
+        public Vector3 BaseRightHandPos { get => _baseRightHandPos; set => _baseRightHandPos = value; }
 
         private void Reset()
         {
@@ -67,25 +81,56 @@ namespace Jointure
             ApplyRotations();
         }
 
+        private void Update()
+        {
+            ApplyRotations();
+        }
+
         /// <summary>
         /// Automatically locates the target transforms in the Player Rig hierarchy if unassigned.
         /// </summary>
         public void FindReferences()
         {
             Transform root = transform;
-            while (root.parent != null && root.GetComponent<Player>() == null && root.name != "[Jointure] Player Rig")
+            while (root.parent != null && root.GetComponent<Player>() == null && !root.name.Contains("[Jointure] Player Rig"))
             {
                 root = root.parent;
             }
 
+            var ctrlRig = root.GetComponentInChildren<ControllerRig>();
+            if (ctrlRig != null)
+            {
+                if (LeftArmTarget == null && ctrlRig.LeftHandTarget != null) LeftArmTarget = ctrlRig.LeftHandTarget;
+                if (RightArmTarget == null && ctrlRig.RightHandTarget != null) RightArmTarget = ctrlRig.RightHandTarget;
+
+                if (LeftArmTarget == null && ctrlRig.LeftControllerTransform != null)
+                    LeftArmTarget = ctrlRig.LeftControllerTransform.Find("LeftHandIKTarget");
+                if (RightArmTarget == null && ctrlRig.RightControllerTransform != null)
+                    RightArmTarget = ctrlRig.RightControllerTransform.Find("RightHandIKTarget");
+            }
+
+            var vrik = root.GetComponentInChildren<RootMotion.FinalIK.VRIK>();
+            if (vrik != null)
+            {
+                if (LeftArmTarget == null && vrik.solver.leftArm.target != null) LeftArmTarget = vrik.solver.leftArm.target;
+                if (RightArmTarget == null && vrik.solver.rightArm.target != null) RightArmTarget = vrik.solver.rightArm.target;
+            }
+
+            // Fallbacks
             if (LeftArmTarget == null)
-                LeftArmTarget = root.Find("PhysicsRig/LeftHand/LeftArmTarget");
+            {
+                LeftArmTarget = root.Find("ControllerRig/CameraOffset/FloorOffset/LeftController/LeftHandIKTarget")
+                             ?? root.Find("PhysicsRig/LeftHand/LeftArmTarget")
+                             ?? root.Find("PhysicsRig/LeftHand");
+            }
             if (RightArmTarget == null)
-                RightArmTarget = root.Find("PhysicsRig/RightHand/RightArmTarget");
-            if (LeftLegTarget == null)
-                LeftLegTarget = root.Find("AnimationRig/LeftFootAnchor/LeftLegTarget");
-            if (RightLegTarget == null)
-                RightLegTarget = root.Find("AnimationRig/RightFootAnchor/RightLegTarget");
+            {
+                RightArmTarget = root.Find("ControllerRig/CameraOffset/FloorOffset/RightController/RightHandIKTarget")
+                              ?? root.Find("PhysicsRig/RightHand/RightArmTarget")
+                              ?? root.Find("PhysicsRig/RightHand");
+            }
+            if (LeftLegTarget == null) LeftLegTarget = root.Find("AnimationRig/LeftFootAnchor/LeftLegTarget");
+            if (RightLegTarget == null) RightLegTarget = root.Find("AnimationRig/RightFootAnchor/RightLegTarget");
 
             if (CharacterAnimator == null)
             {
@@ -102,12 +147,36 @@ namespace Jointure
         }
 
         /// <summary>
-        /// Captures the current target transform local rotations as the base rotations.
+        /// Flips the specified hand by 180 degrees roll.
+        /// </summary>
+        public void FlipHandRoll(bool isLeft)
+        {
+            if (isLeft)
+            {
+                LeftHandOffset.z = (LeftHandOffset.z + 180f) % 360f;
+            }
+            else
+            {
+                RightHandOffset.z = (RightHandOffset.z + 180f) % 360f;
+            }
+            ApplyRotations();
+        }
+
+        /// <summary>
+        /// Captures the current target transform local rotations and positions as the base values.
         /// </summary>
         public void CaptureBaseRotationsFromTargets()
         {
-            if (LeftArmTarget != null) _baseLeftHandEuler = LeftArmTarget.localEulerAngles;
-            if (RightArmTarget != null) _baseRightHandEuler = RightArmTarget.localEulerAngles;
+            if (LeftArmTarget != null)
+            {
+                _baseLeftHandEuler = LeftArmTarget.localEulerAngles;
+                _baseLeftHandPos = LeftArmTarget.localPosition;
+            }
+            if (RightArmTarget != null)
+            {
+                _baseRightHandEuler = RightArmTarget.localEulerAngles;
+                _baseRightHandPos = RightArmTarget.localPosition;
+            }
             if (LeftLegTarget != null) _baseLeftFootEuler = LeftLegTarget.localEulerAngles;
             if (RightLegTarget != null) _baseRightFootEuler = RightLegTarget.localEulerAngles;
         }
@@ -120,10 +189,12 @@ namespace Jointure
             if (LeftArmTarget != null)
             {
                 LeftArmTarget.localRotation = Quaternion.Euler(_baseLeftHandEuler) * Quaternion.Euler(LeftHandOffset);
+                LeftArmTarget.localPosition = _baseLeftHandPos + LeftHandPosOffset;
             }
             if (RightArmTarget != null)
             {
                 RightArmTarget.localRotation = Quaternion.Euler(_baseRightHandEuler) * Quaternion.Euler(RightHandOffset);
+                RightArmTarget.localPosition = _baseRightHandPos + RightHandPosOffset;
             }
             if (LeftLegTarget != null)
             {

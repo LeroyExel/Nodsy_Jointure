@@ -11,6 +11,10 @@ namespace Jointure
         public Transform LeftControllerTransform;
         public Transform RightControllerTransform;
         public Transform FloorOffsetTransform;
+        [Header("IK Targets")]
+        public Transform HeadTarget;
+        public Transform LeftHandTarget;
+        public Transform RightHandTarget;
 
         private void Awake()
         {
