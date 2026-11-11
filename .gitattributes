@@ -1,2 +1,11 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# GitHub language detection: this is a Unity/C# project.
+# Unity's default tutorial scaffolding ships Assets/TutorialInfo/Layout.wlt,
+# a Wolfram Language file that is larger than this project's own C# source,
+# so linguist reported the repository as "Wolfram Language".
+# Mark that third-party scaffolding as vendored so the language bar
+# reflects the actual C# code.
+**/Assets/TutorialInfo/** linguist-vendored
+*.wlt linguist-vendored
