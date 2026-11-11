@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d27685ad7e7fcb4cabcd46cfa4a44a4, type: 3}
+  m_Name: Hover
+  m_EditorClassIdentifier: 
+  Thumb:
+    Idle:
+      RootBone: {x: 0.20406353, y: 0.45859107, z: 0.3386137, w: 0.79585993}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    ThumbrestTouched:
+      RootBone: {x: 0.20406352, y: 0.45859107, z: 0.33861366, w: 0.79585993}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    PrimaryTouched:
+      RootBone: {x: 0.20406352, y: 0.45859107, z: 0.33861366, w: 0.79585993}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    PrimaryButton:
+      RootBone: {x: 0.20406352, y: 0.45859107, z: 0.33861366, w: 0.79585993}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    SecondaryTouched:
+      RootBone: {x: 0.20406352, y: 0.45859107, z: 0.33861366, w: 0.79585993}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    SecondaryButton:
+      RootBone: {x: 0.20406352, y: 0.45859107, z: 0.33861366, w: 0.79585993}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    ThumbstickTouched:
+      RootBone: {x: 0.20406352, y: 0.45859107, z: 0.33861366, w: 0.79585993}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+  Index:
+    Open:
+      RootBone: {x: 0, y: 0, z: 0.13052616, w: 0.9914449}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    Closed:
+      RootBone: {x: 0, y: 0, z: 0.13052616, w: 0.9914449}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    TriggerTouched:
+      RootBone: {x: 0, y: 0, z: 0.13052616, w: 0.9914449}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+  Middle:
+    Open:
+      RootBone: {x: 0, y: 0, z: 0.043619394, w: 0.99904823}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    Closed:
+      RootBone: {x: 0, y: 0, z: 0.043619394, w: 0.99904823}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+  Ring:
+    Open:
+      RootBone: {x: 0, y: 0, z: 0.04361953, w: -0.99904823}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    Closed:
+      RootBone: {x: 0, y: 0, z: 0.04361953, w: -0.99904823}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+  Little:
+    Open:
+      RootBone: {x: 0, y: 0, z: 0.13052633, w: -0.9914449}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    Closed:
+      RootBone: {x: 0, y: 0, z: 0.13052633, w: -0.9914449}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}

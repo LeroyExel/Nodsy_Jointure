@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d27685ad7e7fcb4cabcd46cfa4a44a4, type: 3}
+  m_Name: Default
+  m_EditorClassIdentifier: 
+  Thumb:
+    Idle:
+      RootBone: {x: 0, y: 0, z: 0, w: 1}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    ThumbrestTouched:
+      RootBone: {x: 0.13065211, y: 0.06577384, z: 0.07499403, w: 0.9863973}
+      MiddleBone: {x: 0.47084185, y: 0.00000004366174, z: -0.00000008097442, w: 0.88221765}
+      TipBone: {x: 0.43540385, y: 0.000000026052781, z: -0.00000013247207, w: 0.90023524}
+    PrimaryTouched:
+      RootBone: {x: 0.07545826, y: -0.087550685, z: -0.120718054, w: -0.98593515}
+      MiddleBone: {x: 0.18662824, y: 0.000000016763813, z: 0.00000010651996, w: 0.98243064}
+      TipBone: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
+    PrimaryButton:
+      RootBone: {x: 0.04498864, y: -0.09123527, z: -0.117957965, w: -0.9877946}
+      MiddleBone: {x: 0.18662824, y: 0.000000016763813, z: 0.00000010651996, w: 0.98243064}
+      TipBone: {x: 0.6915656, y: 0.000000027623855, z: -0.00000007365901, w: 0.7223137}
+    SecondaryTouched:
+      RootBone: {x: 0.012773395, y: -0.095054686, z: -0.1255737, w: -0.9874374}
+      MiddleBone: {x: 0.15428585, y: -0.000000029802322, z: 0.00000005681068, w: 0.98802626}
+      TipBone: {x: 0.47598785, y: -0.00000004342179, z: 0.000000082172456, w: 0.8794519}
+    SecondaryButton:
+      RootBone: {x: -0.010471782, y: -0.0981619, z: -0.1156146, w: -0.98837644}
+      MiddleBone: {x: 0.15428585, y: -0.000000029802322, z: 0.00000005681068, w: 0.98802626}
+      TipBone: {x: 0.47598785, y: -0.00000004342179, z: 0.000000082172456, w: 0.8794519}
+    ThumbstickTouched:
+      RootBone: {x: 0.060380083, y: 0.0051803207, z: 0.016980372, w: 0.9980176}
+      MiddleBone: {x: 0.16156265, y: 0.000000018626451, z: -0.000000022351742, w: 0.9868625}
+      TipBone: {x: 0.14679876, y: -0.000000007450581, z: 0.00000002980232, w: 0.9891664}
+  Index:
+    Open:
+      RootBone: {x: 0, y: 0, z: 0, w: 1}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    Closed:
+      RootBone: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+      MiddleBone: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+      TipBone: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+    TriggerTouched:
+      RootBone: {x: 0.08715577, y: 0, z: 0, w: 0.9961947}
+      MiddleBone: {x: 0.08715577, y: 0, z: 0, w: 0.9961947}
+      TipBone: {x: 0.08715577, y: 0, z: 0, w: 0.9961947}
+  Middle:
+    Open:
+      RootBone: {x: 0.043619458, y: 0, z: 0, w: 0.99904823}
+      MiddleBone: {x: 0.08715577, y: 0, z: 0, w: 0.9961947}
+      TipBone: {x: 0.08715577, y: 0, z: 0, w: 0.9961947}
+    Closed:
+      RootBone: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+      MiddleBone: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+      TipBone: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  Ring:
+    Open:
+      RootBone: {x: 0.08715577, y: 0, z: 0, w: 0.9961947}
+      MiddleBone: {x: 0.08715577, y: 0, z: 0, w: 0.9961947}
+      TipBone: {x: 0.08715577, y: 0, z: 0, w: 0.9961947}
+    Closed:
+      RootBone: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+      MiddleBone: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+      TipBone: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  Little:
+    Open:
+      RootBone: {x: 0.13052633, y: 0, z: 0, w: 0.9914448}
+      MiddleBone: {x: 0.13052633, y: 0, z: 0, w: 0.9914448}
+      TipBone: {x: 0.13052633, y: 0, z: 0, w: 0.9914448}
+    Closed:
+      RootBone: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+      MiddleBone: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+      TipBone: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}

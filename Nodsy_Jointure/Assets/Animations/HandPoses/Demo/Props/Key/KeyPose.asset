@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d27685ad7e7fcb4cabcd46cfa4a44a4, type: 3}
+  m_Name: KeyPose
+  m_EditorClassIdentifier: 
+  Thumb:
+    Idle:
+      RootBone: {x: 0.040638577, y: 0.017069751, z: 0.00013312693, w: 0.99902815}
+      MiddleBone: {x: 0.26077244, y: -0, z: -0.000000115542164, w: 0.96540034}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    ThumbrestTouched:
+      RootBone: {x: 0.040638577, y: 0.017069751, z: 0.00013312693, w: 0.99902815}
+      MiddleBone: {x: 0.26077244, y: 0, z: -0.000000115542164, w: 0.96540034}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    PrimaryTouched:
+      RootBone: {x: 0.040638577, y: 0.017069751, z: 0.00013312693, w: 0.99902815}
+      MiddleBone: {x: 0.26077244, y: 0, z: -0.000000115542164, w: 0.96540034}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    PrimaryButton:
+      RootBone: {x: 0.040638577, y: 0.017069751, z: 0.00013312693, w: 0.99902815}
+      MiddleBone: {x: 0.26077244, y: 0, z: -0.000000115542164, w: 0.96540034}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    SecondaryTouched:
+      RootBone: {x: 0.040638577, y: 0.017069751, z: 0.00013312693, w: 0.99902815}
+      MiddleBone: {x: 0.26077244, y: 0, z: -0.000000115542164, w: 0.96540034}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    SecondaryButton:
+      RootBone: {x: 0.040638577, y: 0.017069751, z: 0.00013312693, w: 0.99902815}
+      MiddleBone: {x: 0.26077244, y: 0, z: -0.000000115542164, w: 0.96540034}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    ThumbstickTouched:
+      RootBone: {x: 0.040638577, y: 0.017069751, z: 0.00013312693, w: 0.99902815}
+      MiddleBone: {x: 0.26077244, y: 0, z: -0.000000115542164, w: 0.96540034}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+  Index:
+    Open:
+      RootBone: {x: 0.39883685, y: -0.00000020861619, z: 0.0000001005828, w: 0.9170219}
+      MiddleBone: {x: 0.65765446, y: 0.000000006246432, z: -0.000000013452031, w: 0.7533198}
+      TipBone: {x: 0.3133229, y: -0.00000006128437, z: -0.00000015018544, w: 0.9496467}
+    Closed:
+      RootBone: {x: 0.39883685, y: -0.00000020861619, z: 0.0000001005828, w: 0.9170219}
+      MiddleBone: {x: 0.65765446, y: 0.000000006246432, z: -0.000000013452031, w: 0.7533198}
+      TipBone: {x: 0.3133229, y: -0.00000006128437, z: -0.00000015018544, w: 0.9496467}
+    TriggerTouched:
+      RootBone: {x: 0.39883685, y: -0.00000020861619, z: 0.0000001005828, w: 0.9170219}
+      MiddleBone: {x: 0.65765446, y: 0.000000006246432, z: -0.000000013452031, w: 0.7533198}
+      TipBone: {x: 0.3133229, y: -0.00000006128437, z: -0.00000015018544, w: 0.9496467}
+  Middle:
+    Open:
+      RootBone: {x: 0, y: 0, z: 0, w: 1}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    Closed:
+      RootBone: {x: 0.59716314, y: -0.000000029802315, z: 0.00000015273686, w: 0.80211985}
+      MiddleBone: {x: 0.6198254, y: 0.000000087880586, z: -0.000000043283734, w: 0.7847398}
+      TipBone: {x: 0.49368232, y: -0.00000011962027, z: 0.000000030053613, w: 0.8696423}
+  Ring:
+    Open:
+      RootBone: {x: 0, y: 0, z: 0, w: 1}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    Closed:
+      RootBone: {x: 0.64219964, y: 0.0000005364417, z: 0.0000007268971, w: 0.7665375}
+      MiddleBone: {x: 0.6198255, y: 0.00000007772393, z: -0.00000079507316, w: 0.7847397}
+      TipBone: {x: 0.49368197, y: 0.0000002475198, z: -0.0000004781953, w: 0.86964256}
+  Little:
+    Open:
+      RootBone: {x: 0, y: 0, z: 0, w: 1}
+      MiddleBone: {x: 0, y: 0, z: 0, w: 1}
+      TipBone: {x: 0, y: 0, z: 0, w: 1}
+    Closed:
+      RootBone: {x: 0.64835024, y: -0.00000023841855, z: -0.00000049173826, w: 0.7613423}
+      MiddleBone: {x: 0.6198257, y: -0.00000026188582, z: 0.00000013133342, w: 0.78473955}
+      TipBone: {x: 0.4936827, y: 0.000001071764, z: -0.00000038958177, w: 0.86964214}
