@@ -89,9 +89,9 @@ namespace Jointure
 
     public static class CharacterImporter
     {
-        private const string DefaultTemplateRigPath = "Assets/Prefabs/[Jointure] Player Rig.prefab";
-        private const string DefaultPlayerControllerPath = "Assets/Animations/Player.controller";
-        private const string DefaultHandPosePath = "Assets/Animations/HandPoses/Default.asset";
+        private const string DefaultTemplateRigPath = "Assets/Jointure/Prefabs/[Jointure] Player Rig.prefab";
+        private const string DefaultPlayerControllerPath = "Assets/Jointure/Animations/Player.controller";
+        private const string DefaultHandPosePath = "Assets/Jointure/Animations/HandPoses/Default.asset";
 
         /// <summary>
         /// Retrieves the Humanoid Avatar associated with a model asset or GameObject.

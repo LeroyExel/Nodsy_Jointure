@@ -9,7 +9,7 @@ namespace Jointure
         [MenuItem("GameObject/Jointure/Spawn Point")]
         static void CreateSpawnPoint()
         {
-            GameObject spawnPointPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/[Jointure] Spawn Point.prefab");
+            GameObject spawnPointPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Jointure/Prefabs/[Jointure] Spawn Point.prefab");
             if (!spawnPointPrefab)
                 spawnPointPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Packages/com.nodsy.jointure/Assets/[Jointure] Spawn Point.prefab");
             GameObject spawnPointInstance = PrefabUtility.InstantiatePrefab(spawnPointPrefab) as GameObject;
@@ -18,7 +18,7 @@ namespace Jointure
 
             if (!spawnPointManager)
             {
-                GameObject spawnPointManagerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/[Jointure] Spawn Point Manager.prefab");
+                GameObject spawnPointManagerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Jointure/Prefabs/[Jointure] Spawn Point Manager.prefab");
                 if (!spawnPointManagerPrefab)
                     spawnPointManagerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Packages/com.nodsy.jointure/Assets/[Jointure] Spawn Point Manager.prefab");
                 GameObject spawnPointManagerInstance = PrefabUtility.InstantiatePrefab(spawnPointManagerPrefab) as GameObject;

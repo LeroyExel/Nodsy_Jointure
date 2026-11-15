@@ -66,13 +66,13 @@ namespace Jointure
         private void LoadDefaults()
         {
             if (_templateRig == null)
-                _templateRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/[Jointure] Player Rig.prefab");
+                _templateRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Jointure/Prefabs/[Jointure] Player Rig.prefab");
 
             if (_animatorController == null)
-                _animatorController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Animations/Player.controller");
+                _animatorController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Jointure/Animations/Player.controller");
 
             if (_handPose == null)
-                _handPose = AssetDatabase.LoadAssetAtPath<HandPose>("Assets/Animations/HandPoses/Default.asset");
+                _handPose = AssetDatabase.LoadAssetAtPath<HandPose>("Assets/Jointure/Animations/HandPoses/Default.asset");
         }
 
         public void SetModel(GameObject model)
@@ -317,7 +317,7 @@ namespace Jointure
 
         private void CreatePrefabAction()
         {
-            string targetFolder = "Assets/Prefabs";
+            string targetFolder = "Assets/Jointure/Prefabs";
             if (!Directory.Exists(targetFolder))
             {
                 Directory.CreateDirectory(targetFolder);
